@@ -42,15 +42,11 @@ Cloning switches the bar to the cloned copy (e.g. `<username>.workspaces`),
 which is yours to edit and survives updates.
 
 Saving a file anywhere under `~/.config/omarchy/plugins/` reloads plugin code
-automatically in most cases. If a QML change doesn't visibly apply, don't
-reach for `omarchy-shell shell rescanPlugins` — it only rediscovers
-added/removed plugin folders and re-registers already-loaded plugin
-metadata (IpcHandlers, etc.); it does not force the running process to
-recompile a changed `.qml` file. A QML edit that produces no error but also
-no visible change means the shell is still executing a stale compiled
-version. Confirm by checking `~/.cache/quickshell/qmlcache/` for a `.qmlc`
-file newer than the edit; if none appears, force a real reload with
-`omarchy restart shell` instead, which restarts the process outright.
+automatically. `omarchy-shell shell rescanPlugins` runs that same reload by
+hand, which helps when a save was missed but not when the reload itself left
+old code running. If a change still doesn't apply, restart the shell with
+`omarchy restart shell`. A service whose plugin sets `keepLoaded: true` is kept
+across reloads, so changes to its code always need the restart.
 
 ## Idle and Lock
 
